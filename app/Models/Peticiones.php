@@ -14,15 +14,15 @@ class Peticiones extends Model
         'nombre',
         'cedula',
         'plan',
-        'serial deco 1',
-        'serial tarjeta 1',
-        'serial deco 2',
-        'serial tarjeta 2',
-        'serial deco 3',
-        'serial tarjeta 3',
-        'serial deco 4',
-        'serial tarjeta 4',
-        'serial deco 5',
-        'serial tarjeta 5'
+        'serial_deco_1',
+        'serial_tarjeta_1',
+        'serial_deco_2',
+        'serial_tarjeta_2',
+        'serial_deco_3',
+        'serial_tarjeta_3',
+        'serial_deco_4',
+        'serial_tarjeta_4',
+        'serial_deco_5',
+        'serial_tarjeta_5'
     ];
 }

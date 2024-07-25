@@ -20,6 +20,57 @@ class PeticionesControler extends Controller
         return response()->json($message,200);
     }
 
+    #plantilla para ver una peticion en especifico
+    public function getPeticionTemplate(request $request){
+        $message = [
+            "message"=>"Llamada correcta",
+            "body"=>[
+                "peticion"=>"requerido"
+            ],
+            "status"=>200
+        ];
+
+        return response()->json($message,200);
+    }
+
+    #Funcion para ver una peticion en especifico
+    public function getPeticion(request $request){
+
+        #verifica si el capo peticion esta presente en el request
+        if($request->peticion == "" || $request == "[]"){
+            $message = [
+                "message"=>"Llamada incorrecta",
+                "body"=>"El campo peticion esta vacio",
+                "status"=>400
+            ];
+
+            return response()->json($message, 400);
+        }
+
+        #hace llamdo al registro con la peticion suministrada en el request
+        $peticion = Peticiones::get(["*"])->where('Peticion',null, $request->peticion);
+
+        #verifica si la peticion exise en la DB
+        if ($peticion == "[]"){
+            $message = [
+                "message"=>"Llamada incorrecta",
+                "body"=>"Esta peticion no existe",
+                "status"=>400
+            ];
+            return response()->json($message, 400);
+        }
+
+        #cambia el aray por un objeto
+        $peticion = Peticiones::find($peticion[0]->id);
+
+        $message = [
+            "message"=>"Llamada correcta",
+            "body"=>$peticion,
+            "status"=>200
+        ];
+        return response()->json($message, 200);
+    }
+
     #funcion para ver la plantilla de como hacer el post a Peticiones
     public function postPeticionesTemplate(request $request){
         $message = [
@@ -144,7 +195,10 @@ class PeticionesControler extends Controller
         return response()->json($message, 200);
     }
 
+    #funcion para actualizar todos los comapos o un solo campo de la tabla Peticiones
     public function updatePeticiones(request $request){
+
+        #Verifica si el campo de peticiones del request esta vacio
         if ($request->peticion == ""){
             $message = [
                 "message" =>"Error en la llamada",
@@ -154,8 +208,10 @@ class PeticionesControler extends Controller
             return response()->json($message, 400);
         }
 
+        #hace llamado a la tabla con la peticion suministrada
         $peticion = Peticiones::get(["*"])->where("Peticion",null,$request->peticion);
         
+        #si no existe la peticion suministrada mostrara el error
         if($peticion == "[]"){
             $message = [
                 "message" =>"Error en la llamada",
@@ -165,8 +221,11 @@ class PeticionesControler extends Controller
             return response()->json($message, 400);
         }
 
+        #con el id de la peticion hace llamado otra vez a la tabla para obtener todo el array
         $peticion = Peticiones::find($peticion[0]->id);
 
+        #reconoce si en el request esta o no esta el campo vacion o siquiera esta en el request y este mismo
+        #lo actualiza
         if (isset($request->body["nombre"]) && $request->body["nombre"] != ""){
             $peticion->nombre = $request->body["nombre"];
             $peticion->save();
@@ -227,6 +286,50 @@ class PeticionesControler extends Controller
         ];
         return response()->json($message, 200);
     }
+
+    #plantilla para hacer delete a la tabla peticiones
+    public function deletePeticionesTemplate(request $request){
+        $message = [
+            "message"=>"Llamada correcta",
+            "body"=>[
+                "Peticion"=>"numero de la peticion que desea eliminar"
+            ],
+            "status"=>200
+        ];
+        return response()->json($message, 200);
+
+    }
+
+    #funcion que hace delete a un registro de las peticiones
+    public function deletePeticiones(request $request){
+        
+        if($request->Peticion == ""){
+            $message = [
+                "message"=>"Llamada incorrecta",
+                "body"=>"El campo Peticion esta vacio",
+                "status"=>400
+            ];
+            return response()->json($message, 400);
+        }
+
+        $peticion = Peticiones::get(['*'])->where('Peticion',null, $request->Peticion);
+
+        if($peticion == "[]"){
+            $message = [
+                "message" => "Llamda incorrecta",
+                "body" => "Esta peticion no existe",
+                "status" => 400
+            ];
+            return response()->json($message,400);
+        }
+        $peticion = Peticiones::find($peticion[0]->id);
+        $peticion->delete();
+
+        $message = [
+            "message" => "Llamda correcta",
+            "body" => "La peticion fue eliminada con exito",
+            "status" => 200
+        ];
+        return response()->json($message,200);
+    }
 }   
-
-

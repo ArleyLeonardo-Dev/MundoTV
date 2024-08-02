@@ -11,9 +11,9 @@ class Peticiones extends Model
     protected $table = "Peticiones";
     protected $fillable = [
         'Peticion',
-        'nombre',
-        'cedula',
-        'plan',
+        'Nombre',
+        'Cedula',
+        'Plan',
         'serial_deco_1',
         'serial_tarjeta_1',
         'serial_deco_2',

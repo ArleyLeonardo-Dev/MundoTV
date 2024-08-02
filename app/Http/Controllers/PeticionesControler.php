@@ -133,9 +133,9 @@ class PeticionesControler extends Controller
             try{
                 $creacionPeticion = Peticiones::create([
                     'Peticion'=>$request->Peticion,
-                    'nombre'=>$request->nombre,
-                    'cedula'=>$request->cedula,
-                    'plan'=>$request->plan,
+                    'Nombre'=>$request->nombre,
+                    'Cedula'=>$request->cedula,
+                    'Plan'=>$request->plan,
                     'serial_deco_1'=>$request->serial_deco_1,
                     'serial_tarjeta_1'=>$request->serial_tarjeta_1,
                     'serial_deco_2'=>$request->serial_deco_2,
@@ -227,15 +227,15 @@ class PeticionesControler extends Controller
         #reconoce si en el request esta o no esta el campo vacion o siquiera esta en el request y este mismo
         #lo actualiza
         if (isset($request->body["nombre"]) && $request->body["nombre"] != ""){
-            $peticion->nombre = $request->body["nombre"];
+            $peticion->Nombre = $request->body["nombre"];
             $peticion->save();
         }
         if (isset($request->body["cedula"]) && $request->body["cedula"] != ""){
-            $peticion->cedula = $request->body["cedula"];
+            $peticion->Cedula = $request->body["cedula"];
             $peticion->save();
         }
         if (isset($request->body["plan"]) && $request->body["plan"] != ""){
-            $peticion->plan = $request->body["plan"];
+            $peticion->Plan = $request->body["plan"];
             $peticion->save();
         }
         if (isset($request->body["serial_deco_1"]) && $request->body["serial_deco_1"] != ""){

@@ -6,43 +6,7 @@ use App\Models\Clientes;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-#TODOS LOS METODOS QUE TENGAN TEMPLATE AL FINAL DEL NOMBRE SON METODOS GET PARA VISUALIZAR COMO DEBE ENVIARSE #EL JSON, TODOS CONSTAN DE LA MISMA FUNCION, MOSTRAR COMO ORGANIZAR EL JSON, 
-
-#funcion que me permite devolver los response sin necesidad de escribirlos todos de cero
-function llamada($body, $validator){
-
-    if($validator){
-        $message = [
-            "message"=>"Llamada Correcta",
-            "body"=>$body,
-            "status"=>200
-        ];
-        return response()->json($message, 200);
-    }else{
-        $message = [
-            "message"=>"Llamada Incorrecta",
-            "body"=>$body,
-            "status"=>400
-        ];
-        return response()->json($message, 400);
-    }
-    
-}
-
-#funcion que me permite verificar si el cliente se encuentra en la DB
-function verificar_cliente($cliente){
-    #intenta buscar el nombre en la DB
-    $cliente = Clientes::get(['*'])->where("Nombre",null, $cliente);
-
-    #si devuelve un arreglo vacio significa que no existe
-    if($cliente == "[]"){
-        return llamada("Este Cliente No Existe", false);
-    }
-
-    #en el caso donde no sea vacio lo devuelve y fin de la funcion
-    $cliente = Clientes::find($cliente[0]->id);
-    return $cliente;
-}
+#TODOS LOS METODOS QUE TENGAN TEMPLATE AL FINAL DEL NOMBRE SON METODOS GET PARA VISUALIZAR COMO DEBE ENVIARSE #EL JSON, TODOS CONSTAN DE LA MISMA FUNCION, MOSTRAR COMO ORGANIZAR EL JSON
 
 class ClientesController extends Controller
 {
@@ -50,7 +14,7 @@ class ClientesController extends Controller
     public function getAllClientes(request $request){
 
         $clientes = Clientes::all();
-        return llamada($clientes, true);
+        return Controller::llamada($clientes, true);
     }
 
     public function getClienteTemplate(request $request){
@@ -62,35 +26,35 @@ class ClientesController extends Controller
             "Valor_mes"=>"si requerido",
         ];
 
-        return llamada($body, true);
+        return Controller::llamada($body, true);
     }
 
 #funcion que obtiene a un cliente o clientes dependiendo de por que columna busque
     public function getCliente(request $request){
 
         if($request->all() == '[]'){
-            return llamada("No se ah enviado nada", false);
+            return Controller::llamada("No se ah enviado nada", false);
         }
 
         if($request->Nombre != "" || isset($request->Nombre)){
             $cliente = Clientes::get(['*'])->where('Nombre',null, $request->Nombre);
-            return llamada($cliente, true);
+            return Controller::llamada($cliente, true);
         }
         if($request->Referencia != "" || isset($request->Referencia)){
             $cliente = Clientes::get(['*'])->where('Referencia',null, $request->Referencia);
-            return llamada($cliente, true);
+            return Controller::llamada($cliente, true);
         }
         if($request->Ciudad != "" || isset($request->Ciudad)){
             $cliente = Clientes::get(['*'])->where('Ciudad',null, $request->Ciudad);
-            return llamada($cliente, true);
+            return Controller::llamada($cliente, true);
         }
         if($request->Dia_de_pago != "" || isset($request->Dia_de_pago)){
             $cliente = Clientes::get(['*'])->where('Dia_de_pago',null, $request->Dia_de_pago);
-            return llamada($cliente, true);
+            return Controller::llamada($cliente, true);
         }
         if($request->Valor_mes != "" || isset($request->Valor_mes)){
             $cliente = Clientes::get(['*'])->where('Valor_mes',null, $request->Valor_mes);
-            return llamada($cliente, true);
+            return Controller::llamada($cliente, true);
         }
     }
 
@@ -103,7 +67,7 @@ class ClientesController extends Controller
             "Valor_mes"=>"requerido",
         ];
 
-        return llamada($body, true);
+        return Controller::llamada($body, true);
     }
 
 #funcion para crear registros en la DB
@@ -119,7 +83,7 @@ class ClientesController extends Controller
 
         #si esta mal devuelve el error
         if($validacion->fails()){
-            return llamada($validacion->errors(), false);
+            return Controller::llamada($validacion->errors(), false);
         }else{#si no continua creando y guardando el request en la DB
             $cliente = Clientes::create([
                 "Referencia"=>$request->Referencia,
@@ -128,7 +92,7 @@ class ClientesController extends Controller
                 "Dia_de_pago"=>$request->Dia_de_pago,
                 "Valor_mes"=>$request->Valor_mes
             ]);
-            return llamada($cliente, 200);
+            return Controller::llamada($cliente, 200);
         }
     }
 
@@ -143,7 +107,7 @@ class ClientesController extends Controller
                 "Valor_mes"=>"si requiere",
             ]
         ];
-        return llamada($body, 200);
+        return Controller::llamada($body, 200);
     }
 
     #funcion que actualiza los registros en la DB
@@ -159,37 +123,40 @@ class ClientesController extends Controller
 
         #si falla devuelve el error
         if ($validacion->fails()){
-            return llamada($validacion->errors(), false);
+            return Controller::llamada($validacion->errors(), false);
         }
 
         #se hace llamado a la funcion para verificar si el cliente existe en la db
-        $cliente = verificar_cliente($request->Nombre_Cliente);
+        $cliente = Controller::verificar_cliente($request->Nombre_Cliente);
+        if($cliente == false){
+            return Controller::llamada("Este usuario no existe", false);
+        }
         
         #se verifica si existe el campo en el request y se actualiza
-        if($data["Referencia"] != "" || isset($data["Referencia"]) != null){
+        if(isset($data["Referencia"])){
             $cliente->Referencia = $data["Referencia"];
             $cliente->save();
-            return llamada($cliente, true);
+            return Controller::llamada($cliente, true);
         }
-        if($data["Nombre"] != "" || isset($data["Nombre"]) != null){
+        if(isset($data["Nombre"])){
             $cliente->Nombre = $data["Nombre"];
             $cliente->save();
-            return llamada($cliente, true);
+            return Controller::llamada($cliente, true);
         }
-        if($data["Ciudad"] != "" || isset($data["Ciudad"]) != null){
+        if(isset($data["Ciudad"])){
             $cliente->Ciudad = $data["Ciudad"];
             $cliente->save();
-            return llamada($cliente, true);
+            return Controller::llamada($cliente, true);
         }
-        if($data["Dia_de_pago"] != "" || isset($data["Dia_de_pago"]) != null){
+        if(isset($data["Dia_de_pago"])){
             $cliente->Dia_de_pago = $data["Dia_de_pago"];
             $cliente->save();
-            return llamada($cliente, true);
+            return Controller::llamada($cliente, true);
         }
-        if($data["Valor_mes"] != "" || isset($data["Valor_mes"]) != null){
+        if(isset($data["Valor_mes"])){
             $cliente->Valor_mes = $data["Valor_mes"];
             $cliente->save();
-            return llamada($cliente, true);
+            return Controller::llamada($cliente, true);
         }
     }
 
@@ -197,7 +164,7 @@ class ClientesController extends Controller
         $body = [
             "Cliente" => "requerido"
         ];
-        return llamada($body, true);
+        return Controller::llamada($body, true);
     }
 
     #funcion para borrar un registro de la DB
@@ -209,13 +176,17 @@ class ClientesController extends Controller
 
         #devuelve el error si el request no esta correcto
         if($validacion->fails()){
-            return llamada($validacion->errors(), false);
+            return Controller::llamada($validacion->errors(), false);
         }
 
         #verifica si el cliente existe en la DB
-        $cliente = verificar_cliente($request->Cliente);
+        $cliente = Controller::verificar_cliente($request->Cliente);
+        if($cliente == false){
+            return Controller::llamada("Este usuario no existe", false);
+        }
+        
         $cliente->delete();#elimina y devuelve la confirmacion
-        return llamada("Cliente eliminado", 200);
+        return Controller::llamada("Cliente eliminado", 200);
     }
 
 }

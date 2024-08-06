@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PagosController;
 use App\Http\Controllers\PeticionesControler;
 use App\Models\Clientes;
 use Illuminate\Http\Request;
@@ -20,16 +21,24 @@ Route::patch("peticiones/update/",[PeticionesControler::class, 'updatePeticiones
 Route::get("peticiones/delete", [PeticionesControler::class, 'deletePeticionesTemplate']);
 Route::delete("peticiones/delete", [PeticionesControler::class, 'deletePeticiones']);
 
-
+#links para el CRUD de la tabala clientes
+#metodos get para obtener todos los clientes o clientes en especifico
 Route::get('Clientes/', [ClientesController::class, 'getAllClientes']);
 Route::get('Clientes/search/',[ClientesController::class, 'getClienteTemplate']);
 Route::post('Clientes/search/',[ClientesController::class, 'getCliente']);
 
+#metodo post 
 Route::get('Clientes/post/', [ClientesController::class, 'postClienteTemplate']);
 Route::post('Clientes/post/', [ClientesController::class, 'postCliente']);
 
+#metodo update
 Route::get('Clientes/update/', [ClientesController::class, 'updateClienteTemplate']);
 Route::patch('Clientes/update/', [ClientesController::class, 'updateCliente']);
 
+#metodo delete
 Route::get('Clientes/delete/', [ClientesController::class, 'deleteClienteTemplate']);
 Route::delete('Clientes/delete/', [ClientesController::class, 'deleteCliente']);
+
+
+Route::get('Pagos/post/', [PagosController::class, 'postPagosTemplate']);
+Route::post('Pagos/post/', [PagosController::class, 'postPagos']);

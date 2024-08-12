@@ -10,10 +10,10 @@ class Peticiones extends Model
     use HasFactory;
     protected $table = "Peticiones";
     protected $fillable = [
-        'Peticion',
-        'Nombre',
-        'Cedula',
-        'Plan',
+        'peticion',
+        'nombre',
+        'cedula',
+        'plan',
         'serial_deco_1',
         'serial_tarjeta_1',
         'serial_deco_2',

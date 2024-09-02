@@ -42,3 +42,5 @@ Route::delete('Clientes/delete/', [ClientesController::class, 'deleteCliente']);
 
 Route::get('Pagos/post/', [PagosController::class, 'postPagosTemplate']);
 Route::post('Pagos/post/', [PagosController::class, 'postPagos']);
+
+Route::get("EnviarEmail/", [PagosController::class, 'EnviarEmail']); 

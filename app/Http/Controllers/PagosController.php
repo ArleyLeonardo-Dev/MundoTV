@@ -1,10 +1,12 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 use App\Models\Pagos;
+use App\Models\Clientes;
 
 class PagosController extends Controller
 
@@ -116,4 +118,4 @@ class PagosController extends Controller
             }
         }
     }
-}
+}   

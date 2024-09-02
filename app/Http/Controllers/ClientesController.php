@@ -85,6 +85,10 @@ class ClientesController extends Controller
         if($validacion->fails()){
             return Controller::llamada($validacion->errors(), false);
         }else{#si no continua creando y guardando el request en la DB
+
+            if($request->Dia_de_pago > 31 || $request->Dia_de_pago < 1){
+                return Controller::llamada("Introduzca un dia de mes valido", false);
+            }
             $cliente = Clientes::create([
                 "Referencia"=>$request->Referencia,
                 "Nombre"=>$request->Nombre,
